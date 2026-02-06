@@ -1,0 +1,173 @@
+// prisma/schema.prisma
+// Schema de datos: usuarios, guilds, auditoría, feature flags, estado
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+/// Usuario de Discord
+model User {
+  id            String   @id
+  discordId     String   @unique
+  username      String
+  discriminator String?
+  avatar        String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  // Relaciones
+  guildMemberships GuildMember[]
+  auditActions     AuditLog[]
+
+  @@index([createdAt])
+}
+
+/// Guild / Servidor Discord
+model Guild {
+  id            String   @id
+  discordId     String   @unique
+  name          String
+  icon          String?
+  memberCount   Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relaciones
+  settings       GuildSettings?
+  members        GuildMember[]
+  auditLogs      AuditLog[]
+  featureFlags   FeatureFlag[]
+
+  @@index([createdAt])
+}
+
+/// Configuración por Guild
+model GuildSettings {
+  id            String   @id @default(cuid())
+  guildId       String   @unique
+  prefix        String   @default("!")
+  language      String   @default("es")
+  loggingEnabled Boolean @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  // Relaciones
+  guild         Guild    @relation(fields: [guildId], references: [id], onDelete: Cascade)
+
+  @@index([guildId])
+}
+
+/// Membresía Guild (para tracking de usuarios per guild)
+model GuildMember {
+  id        String   @id @default(cuid())
+  guildId   String
+  userId    String
+  joinedAt  DateTime @default(now())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relaciones
+  guild     Guild    @relation(fields: [guildId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([guildId, userId])
+  @@index([guildId])
+  @@index([userId])
+}
+
+/// Auditoría: log de acciones sensibles
+model AuditLog {
+  id            String   @id @default(cuid())
+  guildId       String?
+  userId        String?
+  action        String   // ej: "COMMAND_EXECUTED", "SETTINGS_CHANGED", "USER_BANNED"
+  resourceType  String?  // ej: "USER", "MESSAGE", "CHANNEL"
+  resourceId    String?
+  details       String?  // JSON stringified si es complejo
+  ipAddress     String?
+  userAgent     String?
+  status        String   @default("SUCCESS") // SUCCESS, FAILED, DENIED
+  errorMessage  String?
+  createdAt     DateTime @default(now())
+
+  // Relaciones
+  guild         Guild?   @relation(fields: [guildId], references: [id], onDelete: SetNull)
+  user          User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([guildId])
+  @@index([userId])
+  @@index([action])
+  @@index([createdAt])
+}
+
+/// Feature Flags runtime (on/off sin deploy)
+model FeatureFlag {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  enabled   Boolean  @default(false)
+  guildId   String?  // null = global; específico = solo ese guild
+  value     String?  // JSON para valores complejos
+  expiresAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relaciones
+  guild     Guild?   @relation(fields: [guildId], references: [id], onDelete: Cascade)
+
+  @@unique([name, guildId])
+  @@index([enabled])
+  @@index([guildId])
+}
+
+/// Advertencias de usuario (para moderación)
+model Warning {
+  id          String   @id @default(cuid())
+  guildId     String
+  userId      String
+  moderatorId String?
+  reason      String
+  expiresAt   DateTime?
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([guildId])
+  @@index([userId])
+  @@index([active])
+  @@index([createdAt])
+}
+
+/// Bans de usuario
+model Ban {
+  id          String   @id @default(cuid())
+  guildId     String
+  userId      String
+  moderatorId String?
+  reason      String
+  expiresAt   DateTime?
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([guildId])
+  @@index([userId])
+  @@index([active])
+  @@index([createdAt])
+}
+
+/// Estado transversal (caché/estado temporal)
+model State {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String   // JSON
+  expiresAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([expiresAt])
+}

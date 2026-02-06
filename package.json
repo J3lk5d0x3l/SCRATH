@@ -1,0 +1,35 @@
+{
+  "name": "enterprise-discord-bot",
+  "version": "1.0.0",
+  "description": "Discord bot enterprise modular SaaS-ready",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "pm2:start": "pm2 start pm2.config.js",
+    "pm2:stop": "pm2 stop all",
+    "pm2:logs": "pm2 logs",
+    "db:migrate": "prisma migrate dev",
+    "db:migrate:dev": "prisma migrate dev",
+    "db:migrate:deploy": "prisma migrate deploy",
+    "db:generate": "prisma generate",
+    "db:seed": "node prisma/seed.js"
+  },
+  "keywords": ["discord", "bot", "enterprise", "modular"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^14.25.1",
+    "dotenv": "^16.4.7",
+    "pino": "^9.6.0",
+    "pino-pretty": "^11.2.2",
+    "@prisma/client": "^6.5.0"
+  },
+  "devDependencies": {
+    "prisma": "^6.5.0"
+  },
+  "engines": {
+    "node": ">=20.20.0"
+  }
+}
