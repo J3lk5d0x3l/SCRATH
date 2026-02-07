@@ -229,8 +229,8 @@ Desarrollado con ❤️ para la comunidad .
 
 Si encuentras problemas:
 - 📖 Revisa la [documentación](docs/)
-- 🐛 Abre un [Issue](https://github.com/tu-usuario/SCRAT/issues)
-- 💬 Discute en [Discussions](https://github.com/tu-usuario/SCRAT/discussions)
+- 🐛 Abre un [Issue](https://github.com/J3lk5d0x3l/SCRAT/issues)
+- 💬 Discute en [Discussions](https://github.com/J3lk5d0x3l/SCRAT/discussions)
 
 ### 🎮 Servidor de Soporte
 
