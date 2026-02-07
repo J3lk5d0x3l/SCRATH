@@ -232,6 +232,14 @@ Si encuentras problemas:
 - 🐛 Abre un [Issue](https://github.com/tu-usuario/SCRAT/issues)
 - 💬 Discute en [Discussions](https://github.com/tu-usuario/SCRAT/discussions)
 
+### 🎮 Servidor de Soporte
+
+¿Necesitas ayuda? ¡Únete a nuestro servidor de Discord!
+
+[![Servidor de Discord](https://img.shields.io/badge/Discord-SCRAT%20Support-5865F2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/KGDvEZYWYf)
+
+[Haz clic aquí para unirte al servidor](https://discord.gg/KGDvEZYWYf)
+
 ---
 
 **Hecho con ❤️ | SCRACH LLC Discord Bot**
