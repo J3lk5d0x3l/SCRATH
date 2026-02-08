@@ -15,3 +15,11 @@ prisma/*.db-journal
 *~
 .env.production
 pm2.log
+*.9
+*.tmp
+*.bak
+*.old
+*TASKLIST*
+*MIGRATION*
+*RESUMEN*
+validate-*

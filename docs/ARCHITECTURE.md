@@ -216,13 +216,27 @@ Notas importantes:
 
 ## Estado actual (repositorio)
 
-- **Comandos implementados**: 17 (archivos en `src/commands`, excluyendo .gitkeep). Lista actual: `help`, `ping`, `info`, `bot-status`, `user-info`, `config`, `mute`, `unmute`, `warn`, `warnings`, `ban`, `unban`, `kick`, `automod`, `purge`, `role-assign`, `logs`.
+- **Lenguaje**: 100% TypeScript (v2.0.0+) con strict mode (noImplicitAny, noUncheckedIndexedAccess, isolatedModules)
+- **Módulos**: ESM (NodeNext module resolution)
+- **Base de Datos**: Drizzle ORM + better-sqlite3 (migrado de Prisma)
+- **Comandos implementados**: 17 (archivos en `src/commands`). Lista: `help`, `ping`, `info`, `bot-status`, `user-info`, `config`, `mute`, `unmute`, `warn`, `warnings`, `ban`, `unban`, `kick`, `automod`, `purge`, `role-assign`, `logs`.
 - **Systems**: 8 implementados en `src/systems` (UserSystem, GuildSystem, ConfigSystem, ModerationSystem, StatisticsSystem, AutoModSystem, ShardingSystem, MentionHandlerSystem).
-- **Domains**: varios dominios de negocio presentes en `src/domains` (ej.: `AutoModDomain`, `ModerationDomain`, `ConfigDomain`, `BanDomain`, etc. — revisar carpeta para detalle).
-- **Modelos BD (Prisma)**: `User`, `Guild`, `GuildSettings`, `GuildMember`, `AuditLog`, `FeatureFlag`, `Warning`, `Ban`, `State` (ver `prisma/schema.prisma`).
-- **Servicios**: Logger (`src/services/logger.js`), Audit, FeatureFlags, RateLimit, EmbedFactory, entre otros.
+- **Domains**: 4 dominios (`AutoModDomain`, `ModerationDomain`, `ConfigDomain`, `BanDomain`).
+- **Servicios**: Logger (Pino), Audit (fail-safe), RateLimit (3-niveles), Backpressure (3-tiers), Timeout (con retry), FeatureFlags, EmbedFactory, Health.
+- **Tablas BD (Drizzle)**: users, guilds, guildSettings, guildMembers, warnings, bans, auditLogs, featureFlags, featureFlagOverrides, state.
 
-Nota: se eliminaron referencias a fases o features no presentes en el código actual (por ejemplo claims de "Fase 5 completa", endpoints HTTP de health, o conteos inexactos). Este documento refleja el estado del código en el repositorio.
+### Resiliencia v2.0.0+
+- **Rate Limiter**: Token bucket (120/min global, 60/min guild, 30/min user, command cooldown)
+- **Backpressure**: Semáforo (max 50 global, 10 guild, 3 user concurrentes)
+- **Timeouts**: 30s default, exponential backoff, max 2 retries
+- **Error Boundaries**: Process level (uncaughtException, unhandledRejection) + interaction level (try-catch)
+- **Auditoría Fail-Safe**: .catch(() => null) en todas las operaciones DB
+
+### Logger Centralizado (v2.0.0+)
+- Pino estructurado (JSON production, pretty+colored dev)
+- Contexto: { level, timestamp, environment, shardId, guildId, userId, correlationId, duracionMs, estado, error }
+- 100% Español (mensajes y observabilidad)
+- NO console.log en codebase
 ---
 
 ## Contribución y Mantenimiento

@@ -1,6 +1,59 @@
 # Changelog
 
-## v1.0.0 (actual) - 2026-02-06
+## v2.0.0 (actual) - 2026-02-08
+
+**MIGRACIÓN COMPLETADA: JavaScript → TypeScript (ESM) + Drizzle ORM + Resiliencia Anti-Spam**
+
+### Cambios Mayores (v2.0.0)
+
+#### Tecnología Base
+- ✅ **100% TypeScript** - Migración completa de src/ a .ts (48 archivos)
+- ✅ **Prisma → Drizzle ORM** - 10 tablas con índices + better-sqlite3
+- ✅ **ESM Nativo** - NodeNext module resolution, sin require()
+- ✅ **Strict Mode** - tsconfig.json con strict: true, noImplicitAny, isolatedModules
+
+#### Resiliencia Anti-Spam REAL
+- ✅ **Rate Limiter** - Token bucket 3-niveles (global 120/min, guild 60/min, user 30/min, command cooldown)
+- ✅ **Backpressure** - Semáforo 3-tiers (max 50 global, 10 guild, 3 user concurrentes)
+- ✅ **Timeouts** - withTimeout() con exponential backoff retry (30s default, max 2 intentos)
+- ✅ **Error Boundaries** - uncaughtException + unhandledRejection handlers + try-catch en interactionCreate
+- ✅ **Auditoría Fail-Safe** - createAudit() nunca crashea, .catch(() => null) en repos
+
+#### Base de Datos (Drizzle)
+- users (discordId unique)
+- guilds (discordId unique)
+- guildSettings (configuración por servidor)
+- guildMembers (relación usuario-servidor)
+- warnings (advertencias persistentes)
+- bans (bans con TTL opcional)
+- auditLogs (bitácora completa)
+- featureFlags (flags globales)
+- featureFlagOverrides (overrides por servidor)
+- state (cache key-value con TTL)
+
+#### Logger Centralizado
+- Pino estructurado (JSON production, pretty+colored dev)
+- 100% Español (contexto + mensajes)
+- NO console.log en codebase
+
+#### Comandos (17 total)
+ping, help, ban, kick, warn, warnings, purge, info, user-info, unban, logs, automod, config, role-assign, bot-status, mute, unmute
+
+#### Scripts Actualizado
+- `npm run dev` → `tsx watch src/index.ts`
+- `npm start` → `tsx src/index.ts`
+- `npm run build` → `tsc -p tsconfig.json` (opcional, no requerido para ejecución)
+- `npm run db:push` → `drizzle-kit push:sqlite`
+
+### Migraciones Internas Completadas
+- Eliminados: Prisma schema, migraciones Prisma
+- Agregados: drizzle.config.ts, schema.ts Drizzle, mejor-sqlite3 driver
+- Actualizado: package.json (NO Prisma, agregado Drizzle, Pino, tsx)
+- Actualizado: tsconfig.json (strict mode, ESM NodeNext)
+
+---
+
+## v1.0.0 - 2026-02-06
 
 Enterprise Discord Bot - arquitectura modular.
 

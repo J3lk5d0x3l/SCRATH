@@ -1,19 +1,19 @@
 # 🤖 Enterprise Discord Bot
 
-Un bot Discord **modular, escalable y enterprise-ready** con arquitectura profesional por capas, diseñado para soportar miles de servidores con alto rendimiento y mantenibilidad.
+Un bot Discord **modular, escalable y enterprise-ready** en **TypeScript (ESM)** con arquitectura profesional por capas, diseñado para soportar miles de servidores con alto rendimiento, resiliencia anti-spam y mantenibilidad superior.
 
 ## ✨ Características Principales
 
-- **Arquitectura Modular por Capas** - Separación clara entre presentación, lógica de negocio, datos e infraestructura
-- **Comandos Slash Completos** - Ban, kick, mute, automod, warnings, logs de auditoría y más
-- **Base de Datos Prisma + SQLite** - Persistencia robusta y migraciones versionadas
-- **Logger Estructurado** - Trazabilidad completa con Pino
-- **Auditoría Integrada** - Registro de todas las acciones administrativas
+- **100% TypeScript (ESM)** - Tipado estricto, ejecución directa desde `src/` con `tsx`
+- **Arquitectura Modular por Capas** - Separación clara: commands → systems → domains/database/services
+- **Drizzle ORM + SQLite** - Base de datos ligera, rápida, con migraciones versionadas
+- **Resiliencia Anti-Spam** - Rate limiting multinivel + backpressure + timeouts + degradación
+- **Comandos Slash** - Ban, kick, mute, automod, warnings, logs de auditoría y más
+- **Logger Estructurado (Pino)** - Trazabilidad completa en español
+- **Auditoría Integrada** - Registro persistente de acciones sensibles
 - **Feature Flags Runtime** - Habilita/deshabilita funcionalidades sin redeploy
-- **Rate Limiting** - Protección contra abuso
 - **Sharding Preparado** - Escalable a 10.000+ servidores con PM2
-- **ESM Puro** - Módulos modernos de JavaScript
-- **Totalmente Documentado** - Guías de arquitectura, comandos y changelog
+- **Observabilidad Enterprise** - Logs con contexto (shardId, guildId, userId, correlationId)
 
 ## 🚀 Inicio Rápido
 
@@ -22,32 +22,28 @@ Un bot Discord **modular, escalable y enterprise-ready** con arquitectura profes
 - **npm** o **yarn**
 - Token de un bot en [Discord Developer Portal](https://discord.com/developers/applications)
 
-### Instalación
+### Instalación & Ejecución
 
 ```bash
-# 1. Clona el repositorio
-git clone https://github.com/tu-usuario/SCRAT.git
-cd SCRAT
-
-# 2. Instala dependencias
+# 1. Instala dependencias
 npm install
 
-# 3. Crea tu archivo .env
+# 2. Copia y configura .env
 cp .env.example .env
+# Edita .env y añade tu DISCORD_TOKEN
 
-# 4. Configura las variables de entorno obligatorias en .env:
-#    - DISCORD_TOKEN: Token de tu bot
-#    - DATABASE_URL: Ruta a la base de datos (ej: file:./prisma/bot.db)
-#    - ENVIRONMENT: development o production
+# 3. Desarrollo (TypeScript + watch)
+npm run dev
 
-# 5. Genera el cliente de Prisma
-npm run db:generate
+# 4. Build (opcional - compilación con `tsc`)
+npm run build
 
-# 6. Ejecuta las migraciones
-npm run db:migrate:dev
-
-# 7. Inicia el bot
+# 5. Producción (ejecutar desde `src` con tsx)
 npm start
+
+# 6. Bases de datos (Drizzle)
+npm run db:generate   # Generar migraciones
+npm run db:push       # Aplicar migraciones
 ```
 
 ## 📋 Comandos Disponibles
@@ -82,7 +78,7 @@ SCRAT/
 ├── src/
 │   ├── core/              # Bootstrap, config, logger, inyección de dependencias
 │   ├── infra/             # Adaptadores Discord, REST, client
-│   ├── database/          # Prisma, repositorios, migraciones
+│   ├── database/          # Drizzle (ORM), repositorios, migraciones
 │   ├── domains/           # Lógica de negocio (AutoMod, Ban, Config, etc)
 │   ├── systems/           # Orquestación de casos de uso
 │   ├── commands/          # Slash commands

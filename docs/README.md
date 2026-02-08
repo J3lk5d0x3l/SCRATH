@@ -1,29 +1,36 @@
 # README - Enterprise Discord Bot
 
-Bot Discord modular, escalable, enterprise-ready.
+Bot Discord modular, escalable, enterprise-ready. **Versión 2.0.0+: 100% TypeScript, Drizzle ORM, Resiliencia Anti-Spam Real.**
 
 ## Características
 
 Resumen de la arquitectura y componentes implementados:
 
+- **100% TypeScript (ESM)** - Strict mode, NodeNext module resolution
+- **Drizzle ORM + SQLite** - better-sqlite3 driver, 10 tablas con índices
 - Arquitectura modular por capas (core, infra, domains, systems, commands, events, services)
-- Logger estructurado (`src/services/logger.js`)
-- Base de datos Prisma + SQLite (schema en `prisma/schema.prisma`)
-- Auditoría integrada (`src/services/audit.js`)
-- Feature flags runtime (`src/services/featureFlags.js`)
-- Rate limiting en memoria (`src/services/rateLimit.js`)
-- ESM puro
-- Preparado para sharding (sistema en `src/systems/ShardingSystem.js`)
-- Comandos y sistemas (ver `src/commands/`, `src/systems/`, `src/domains/`)
-- Event handlers para eventos Discord principales
-- Embed factory para respuestas de usuario
+- Logger estructurado (Pino, 100% Español)
+- Auditoría integrada (fail-safe, nunca crashea)
+- **Rate Limiting** - 3 niveles (global, guild, user, command cooldown)
+- **Backpressure** - Semáforo 3-tiers (max 50 global, 10 guild, 3 user concurrentes)
+- **Timeouts** - 30s default con exponential backoff retry
+- **Error Boundaries** - Process level + interaction level (nunca crashea por comando fallido)
+- Feature flags runtime (con cache + overrides per-guild)
+- ESM puro, sin require()
+- Preparado para sharding (sistema en `src/systems/ShardingSystem.ts`)
+- 17 comandos con protecciones
+- 4 event handlers con error handling
+- 10 tablas de persistencia (users, guilds, guildSettings, guildMembers, warnings, bans, auditLogs, featureFlags, featureFlagOverrides, state)
 
 ## Stack Requerido
 
 - Node.js 20.20+
 - discord.js 14.25.1
-- Prisma 6.5.0
-- SQLite 3
+- TypeScript 5.5.2
+- Drizzle ORM 0.30.0
+- better-sqlite3 8.5.0
+- Pino 9.6.0
+- tsx (TypeScript executor, devDep)
 
 ## Instalación Rápida (mínimo)
 
@@ -32,39 +39,37 @@ Resumen de la arquitectura y componentes implementados:
 npm install
 
 # 2. Copia .env.example a .env y completa las variables obligatorias
-copy .env.example .env
+cp .env.example .env
 # Asegúrate de definir:
 #   DISCORD_TOKEN: token de tu bot en Discord Developer Portal
 #   DATABASE_URL: ruta SQLite (por defecto: file:./prisma/bot.db)
 #   GUILD_ID: (opcional) ID de un guild para desarrollo (registra comandos sin 30 min de latencia)
-#   ENVIRONMENT: development o production (afecta registro de comandos)
+#   ENVIRONMENT: development o production
 
-# 3. Generar Prisma client
-npm run db:generate
+# 3. Crear BD e inicializar schema Drizzle
+npm run db:push
 
-# 4. (Desarrollo) ejecutar migraciones locales
-npm run db:migrate:dev
-
-# 5. Inicia bot
+# 4. Inicia bot (TypeScript directo)
 npm start
 ```
 
 ### Configuración de Slash Commands por entorno
 
 **Desarrollo (ENVIRONMENT=development)**
-- Si `GUILD_ID` está configurado: registra comandos en ese guild (instantáneo, sin 30 min de latencia)
+- Si `GUILD_ID` está configurado: registra comandos en ese guild (instantáneo)
 - Si `GUILD_ID` está vacío: registra global (30 min de latencia aprox.)
 
 **Producción (ENVIRONMENT=production)**
 - Siempre registra global
 
-Ver `.env.example` para más detalles.
-
 ## Desarrollo
 
 ```bash
-# Watch mode (auto-reload)
+# Watch mode (auto-reload, TypeScript directo)
 npm run dev
+
+# Build (compilar a dist/, opcional)
+npm run build
 
 # PM2 (si usas sharding con múltiples procesos)
 npm run pm2:start
@@ -74,7 +79,9 @@ npm run pm2:logs
 
 ## Comandos Disponibles
 
-Ver lista completa de comandos en `src/commands/` o en `docs/COMMANDS.md`.
+17 comandos implementados: `ping`, `help`, `ban`, `kick`, `warn`, `warnings`, `purge`, `info`, `user-info`, `unban`, `logs`, `automod`, `config`, `role-assign`, `bot-status`, `mute`, `unmute`.
+
+Ver detalles en `src/commands/` o plantilla en `docs/COMMANDS.md`.
 
 ## Estructura
 
