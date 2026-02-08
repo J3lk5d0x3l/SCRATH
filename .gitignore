@@ -1,25 +1,47 @@
+# Node dependencies
 node_modules/
+
+# Environment files (keep secrets out of repo)
 .env
 .env.local
-.DS_Store
-*.log
-logs/
+.env.production
+
+
+# Build outputs
 dist/
 build/
+
+# Logs
+logs/
+*.log
+
+# Database / runtime files
+data/
 prisma/*.db
 prisma/*.db-journal
+*.sqlite
+*.db
+
+# PM2
+pm2.pid
+pm2.log
+
+# Editor / OS files
+.DS_Store
 .idea/
 .vscode/
 *.swp
 *.swo
 *~
-.env.production
-pm2.log
-*.9
+Thumbs.db
+
+# TypeScript / tooling
+*.tsbuildinfo
+coverage/
+
+# Misc backups/temp
 *.tmp
 *.bak
 *.old
-*TASKLIST*
-*MIGRATION*
-*RESUMEN*
-validate-*
+
+# Keep package-lock in repo for reproducible installs (do NOT ignore)

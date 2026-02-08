@@ -1,7 +1,7 @@
 import { getService } from '../core/container.js';
 
 const event = {
-  name: 'ready',
+  name: 'clientReady',
   once: true,
 
   async execute(client: any) {

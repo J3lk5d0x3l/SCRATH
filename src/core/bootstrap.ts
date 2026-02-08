@@ -25,7 +25,7 @@ export async function bootstrap(): Promise<{ client: any; container: any }> {
     registerEvents(client, events);
     logger.info({ count: events.length }, '✅ Manejadores de eventos registrados');
 
-    client.once('ready', async () => {
+    client.once('clientReady', async () => {
       logger.info('🤖 Bot listo, registrando comandos slash...');
       try {
         if (!client.application) {
@@ -43,7 +43,7 @@ export async function bootstrap(): Promise<{ client: any; container: any }> {
 
     logger.info('Conectando a Discord...');
     await client.login(config.discordToken);
-    logger.info('✅ Autenticación iniciada, esperando ready...');
+    logger.info('✅ Autenticación iniciada, esperando clientReady...');
 
     return { client, container };
   } catch (error) {

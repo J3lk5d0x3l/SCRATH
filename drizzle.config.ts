@@ -1,7 +1,7 @@
 import type { Config } from 'drizzle-kit';
 import path from 'path';
 
-const dbPath = path.join(process.cwd(), 'prisma', 'bot.db');
+const dbPath = path.join(process.cwd(), 'data', 'bot.db');
 
 export default {
   schema: './src/database/schema.ts',
