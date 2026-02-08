@@ -68,7 +68,7 @@ Este proyecto se mantiene en desarrollo y se actualiza regularmente. Está pensa
 
 Únete al servidor de soporte usando el banner arriba para reportar bugs, hacer sugerencias o simplemente conectar con la comunidad.
 
-Si quieres apoyar el desarrollo: https://paypal.me/TU_PAYPAL
+Si quieres apoyar el desarrollo: con una estrella ⭐ 
 
 ---
 
