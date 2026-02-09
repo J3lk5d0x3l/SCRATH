@@ -1,11 +1,11 @@
 # Node dependencies
 node_modules/
+package-lock.json
 
 # Environment files (keep secrets out of repo)
 .env
 .env.local
 .env.production
-
 
 # Build outputs
 dist/
@@ -17,12 +17,12 @@ logs/
 
 # Database / runtime files
 data/
-prisma/*.db
-prisma/*.db-journal
 *.sqlite
 *.db
+*.db-journal
 
 # PM2
+pm2.config.js
 pm2.pid
 pm2.log
 
@@ -43,5 +43,3 @@ coverage/
 *.tmp
 *.bak
 *.old
-
-# Keep package-lock in repo for reproducible installs (do NOT ignore)
