@@ -4,6 +4,16 @@ Bot Discord modular para entornos producción. Framework base con arquitectura e
 
 **Node 20+** | **TypeScript 5.5** | **discord.js 14.25**
 
+---
+
+## Únete a la comunidad
+
+¿Tienes preguntas? ¿Reportes de bugs? ¿Sugerencias?
+
+**[→ Entra al servidor de Discord](https://discord.gg/7TCCJjwgd)**
+
+---
+
 ## Setup
 
 ```bash
